@@ -8,13 +8,13 @@ jobs:
   sync_dataset:
     runs-on: linux-arm64-npu-1
     container:
-      image: registry.cn-hangzhou.aliyuncs.com/modelscope-repo/modelscope:ubuntu20.04-py38-torch2.0.1-tf2.13.0-1.9.5
+      image: m.daocloud.io/gcr.io/distroless/python3-debian12	
     steps:
       - uses: actions/checkout@v4
       - name: download models
         run: |
+          pip install modelscope
           for m in `cat .github/workflows/model_list.ini`;do modelscope download  --model $m;done 
-
       - name: download dataset
         run: |
           for m in `cat .github/workflows/dataset_list.ini`;do modelscope download  --dataset $m;done 
