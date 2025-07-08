@@ -8,7 +8,7 @@ jobs:
   sync_dataset:
     runs-on: linux-arm64-npu-1
     container:
-      image: m.daocloud.io/gcr.io/distroless/python3-debian12	
+      image: m.daocloud.io/docker.io/python:3.11
     steps:
       - uses: actions/checkout@v4
       - name: download models
