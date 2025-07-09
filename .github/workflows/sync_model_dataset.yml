@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: download models
         run: |
+          pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
           pip install modelscope
           for m in `cat .github/workflows/model_list.ini`;do modelscope download  --model $m;done 
       - name: download dataset
