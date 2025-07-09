@@ -29,6 +29,7 @@ pwd
 
 pip install torch-npu==2.6.0rc1
 pip install triton-ascend==3.2.0rc2
+pip install vllm==0.8.5
 
 pip install -e "python[all_npu]"
 
