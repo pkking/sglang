@@ -10,6 +10,10 @@ jobs:
     container:
       image: m.daocloud.io/docker.io/python:3.11
     steps:
+      - name: check env
+        run: |
+          cat ~/.gitconfig
+          curl https://gh-proxy.test.osinfra.cn
       - uses: actions/checkout@v4
       - name: download models
         run: |
