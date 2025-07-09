@@ -1,5 +1,8 @@
-#!/bin/bash -e
+#!/bin/bash
 # Install the required dependencies in CI.
+sed -i 's|ports.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list
+apt update -y
+apt install software-properties-common -y
 pip install --upgrade pip
 
 pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
