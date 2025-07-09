@@ -5,7 +5,7 @@ apt update -y
 apt install software-properties-common -y
 pip install --upgrade pip
 
-pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple
 
 pip uninstall sgl-kernel -y || true
 
