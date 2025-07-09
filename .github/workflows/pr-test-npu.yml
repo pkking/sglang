@@ -31,8 +31,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          repository: 'sgl-project/sglang'
 
       - name: Install dependencies
         run: |
