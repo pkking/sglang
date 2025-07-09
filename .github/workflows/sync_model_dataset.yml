@@ -13,6 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: download models
         run: |
+          cat ~/.gitconfig
+          curl https://gh-proxy.test.osinfra.cn
           pip install modelscope
           for m in `cat .github/workflows/model_list.ini`;do modelscope download  --model $m;done 
       - name: download dataset
