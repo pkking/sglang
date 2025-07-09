@@ -3,7 +3,13 @@ on:
   schedule:
     - cron: '0 */6 * * *' # every 6 hours
   workflow_dispatch:
-
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/dataset_list.ini"
+      - ".github/workflows/model_list.ini"
+      - ".github/workflows/sync_model_dataset.yml"
 jobs:
   sync_dataset:
     runs-on: linux-arm64-npu-1
