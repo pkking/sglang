@@ -9,7 +9,7 @@ pip uninstall sgl-kernel -y || true
 
 
 pip install torch-npu==2.6.0rc1
-pip install triton-ascend=3.2.0rc2
+pip install triton-ascend==3.2.0rc2
 
 pip install -e "python[all_npu]"
 
