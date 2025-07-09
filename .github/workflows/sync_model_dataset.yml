@@ -8,7 +8,7 @@ jobs:
   sync_dataset:
     runs-on: linux-arm64-npu-1
     container:
-      image: m.daocloud.io/docker.io/python:3.11
+      image: swr.cn-southwest-2.myhuaweicloud.com/base_image/ascend-ci/cann:8.2.rc1.alpha003-910b-openeuler22.03-py3.11
     steps:
       - name: check env
         run: |
@@ -17,8 +17,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: download models
         run: |
-          cat ~/.gitconfig
-          curl https://gh-proxy.test.osinfra.cn
           pip install modelscope
           for m in `cat .github/workflows/model_list.ini`;do modelscope download  --model $m;done 
       - name: download dataset
