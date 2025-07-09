@@ -1,0 +1,60 @@
+name: PR Test (Ascend)
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "python/**"
+      - "scripts/**"
+      - "test/**"
+      - ".github/workflows/pr-test-npu.yml"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "python/**"
+      - "scripts/**"
+      - "test/**"
+      - ".github/workflows/pr-test-npu.yml"
+
+concurrency:
+  group: pr-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-test-basic:
+    if: (github.repository == 'sgl-project/sglang' || github.event_name == 'pull_request') &&
+        github.event.pull_request.draft == false
+    runs-on: 1-npu-runner
+    container:
+      image: swr.cn-southwest-2.myhuaweicloud.com/base_image/ascend-ci/cann:8.2.rc1.alpha003-910b-openeuler22.03-py3.11
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          bash scripts/npu_ci_install_dependency.sh
+
+      - name: Run test
+        timeout-minutes: 30
+        run: |
+          cd test/srt
+          python3 run_suite.py --suite per-commit-npu
+
+
+  finish:
+    if: always()
+    needs: [ unit-test-basic ]
+    runs-on: 1-npu-runner
+    steps:
+      - name: Check all dependent job statuses
+        run: |
+          results=(${{ join(needs.*.result, ' ') }})
+          for result in "${results[@]}"; do
+            if [ "$result" = "failure" ] || [ "$result" = "cancelled" ]; then
+              echo "Job failed with result: $result"
+              exit 1
+            fi
+          done
+          echo "All jobs completed successfully"
+          exit 0
