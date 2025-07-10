@@ -35,6 +35,8 @@ jobs:
       - name: Install dependencies
         run: |
           bash scripts/npu_ci_install_dependency.sh
+          # copy required dataset file from our daily cache
+          cp ~/.cache/modelscope/hub/datasets/otavia/ShareGPT_Vicuna_unfiltered/ShareGPT_V3_unfiltered_cleaned_split.json /tmp
 
       - name: Run test
         timeout-minutes: 30
