@@ -11,7 +11,7 @@ pip uninstall sgl-kernel -y || true
 
 
 ### Download MemFabricV2
-MEMFABRIC_URL="https://sglang-ascend.obs.cn-east-3.myhuaweicloud.com:443/sglang/mf_adapter-1.0.0-cp311-cp311-linux_aarch64.whl?AccessKeyId=HPUAXT4YM0U8JNTERLST&Expires=1783151861&Signature=3j10QDUjqk70enaq8lostYV2bEA%3D"
+MEMFABRIC_URL="https://sglang-ascend.obs.cn-east-3.myhuaweicloud.com:443/sglang/mf_adapter-1.0.0-cp311-cp311-linux_aarch64.whl"
 wget "${MEMFABRIC_URL}" && pip install ./mf_adapter-1.0.0-cp311-cp311-linux_aarch64.whl
 
 
