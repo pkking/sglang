@@ -38,6 +38,12 @@ pip install triton-ascend==$TRITON_ASCEND_VERSION
 pip install -e "python[srt_npu]"
 
 
+### Modify PyTorch TODO: to be removed later
+TORCH_LOCATION=$(pip show torch | grep Location | awk -F' ' '{print $2}')
+sed -i 's/from triton.runtime.autotuner import OutOfResources/from triton.runtime.errors import OutOfResources/' "${TORCH_LOCATION}/torch/_inductor/runtime/triton_heuristics.py"
+
+
+
 # official PPA comes with ffmpeg 2.8, which lacks tons of features, we use ffmpeg 4.0 here
 # add-apt-repository -y ppa:jonathonf/ffmpeg-4 # for ubuntu20.04 official PPA is already version 4.2, you may skip this step
 # apt-get update -y
