@@ -12,6 +12,7 @@ jobs:
         run: |
           npu-smi info
           ls /dev
+          sleep 3600
   test2:
     runs-on: linux-arm64-npu-2
     container:
