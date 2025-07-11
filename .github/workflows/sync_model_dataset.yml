@@ -9,6 +9,7 @@ on:
     paths:
       - ".github/workflows/dataset_list.ini"
       - ".github/workflows/model_list.ini"
+      - ".github/workflows/hf_model_list.ini"
       - ".github/workflows/sync_model_dataset.yml"
 jobs:
   sync_dataset:
@@ -26,6 +27,13 @@ jobs:
           pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
           pip install modelscope
           for m in `cat .github/workflows/model_list.ini`;do modelscope download  --model $m;done 
+      - name: hf download models
+        env:
+          HF_ENDPOINT: https://hf-mirror.com
+        run: |
+          pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple
+          pip install "huggingface_hub[cli]"
+          for m in `cat .github/workflows/hf_model_list.ini`;do huggingface-cli download $m;done 
       - name: download dataset
         run: |
           for m in `cat .github/workflows/dataset_list.ini`;do modelscope download  --dataset $m;done 
