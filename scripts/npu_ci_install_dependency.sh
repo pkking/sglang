@@ -1,11 +1,15 @@
 #!/bin/bash
+# apt cache proxy
+sed -Ei 's@(ports|archive).ubuntu.com@cache-service.nginx-pypi-cache.svc.cluster.local:8081@g' /etc/apt/sources.list
+
 # Install the required dependencies in CI.
-sed -i 's|ports.ubuntu.com|mirrors.tuna.tsinghua.edu.cn|g' /etc/apt/sources.list
 apt update -y
 apt install -y build-essential cmake python3-pip python3-dev wget net-tools zlib1g-dev lld clang software-properties-common
 
+# setup pip cache proxy
+pip config set global.index-url http://cache-service.nginx-pypi-cache.svc.cluster.local/pypi/simple
+pip config set global.trusted-host cache-service.nginx-pypi-cache.svc.cluster.local
 
-pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple
 python3 -m pip install --upgrade pip
 pip uninstall sgl-kernel -y || true
 
