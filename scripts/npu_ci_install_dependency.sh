@@ -1,16 +1,14 @@
 #!/bin/bash
-# apt cache proxy
-sed -Ei 's@(ports|archive).ubuntu.com@cache-service.nginx-pypi-cache.svc.cluster.local:8081@g' /etc/apt/sources.list
-
 # Install the required dependencies in CI.
+sed -Ei 's@(ports|archive).ubuntu.com@cache-service.nginx-pypi-cache.svc.cluster.local:8081@g' /etc/apt/sources.list
 apt update -y
 apt install -y build-essential cmake python3-pip python3-dev wget net-tools zlib1g-dev lld clang software-properties-common
 
-# setup pip cache proxy
+
 pip config set global.index-url http://cache-service.nginx-pypi-cache.svc.cluster.local/pypi/simple
 pip config set global.trusted-host cache-service.nginx-pypi-cache.svc.cluster.local
 
-python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade pip --no-cache-dir
 pip uninstall sgl-kernel -y || true
 
 
@@ -29,46 +27,19 @@ git clone --depth 1 https://github.com/vllm-project/vllm.git --branch $VLLM_TAG 
 PYTORCH_VERSION=2.6.0
 TORCHVISION_VERSION=0.21.0
 PTA_VERSION=2.6.0rc1
-pip install torch==$PYTORCH_VERSION torchvision==$TORCHVISION_VERSION --index-url https://download.pytorch.org/whl/cpu
-pip install torch_npu==$PTA_VERSION
+pip install torch==$PYTORCH_VERSION torchvision==$TORCHVISION_VERSION --index-url https://download.pytorch.org/whl/cpu --no-cache-dir
+pip install torch_npu==$PTA_VERSION --no-cache-dir
 
 
 ### Install Triton-Ascend
 TRITON_ASCEND_VERSION=3.2.0rc2
-pip install attrs==24.2.0 numpy==1.26.4 scipy==1.13.1 decorator==5.1.1 psutil==6.0.0 pytest==8.3.2 pytest-xdist==3.6.1 pyyaml pybind11
-pip install triton-ascend==$TRITON_ASCEND_VERSION
+pip install attrs==24.2.0 numpy==1.26.4 scipy==1.13.1 decorator==5.1.1 psutil==6.0.0 pytest==8.3.2 pytest-xdist==3.6.1 pyyaml pybind11 --no-cache-dir
+pip install triton-ascend==$TRITON_ASCEND_VERSION --no-cache-dir
 
 
-pip install -e "python[srt_npu]"
+pip install -e "python[srt_npu]" --no-cache-dir
 
 
 ### Modify PyTorch TODO: to be removed later
 TORCH_LOCATION=$(pip show torch | grep Location | awk -F' ' '{print $2}')
 sed -i 's/from triton.runtime.autotuner import OutOfResources/from triton.runtime.errors import OutOfResources/' "${TORCH_LOCATION}/torch/_inductor/runtime/triton_heuristics.py"
-
-
-
-# official PPA comes with ffmpeg 2.8, which lacks tons of features, we use ffmpeg 4.0 here
-# add-apt-repository -y ppa:jonathonf/ffmpeg-4 # for ubuntu20.04 official PPA is already version 4.2, you may skip this step
-# apt-get update -y
-# apt-get install -y build-essential python3-dev python3-setuptools make cmake
-# apt-get install -y ffmpeg libavcodec-dev libavfilter-dev libavformat-dev libavutil-dev
-# # build decord
-# git clone --recursive https://github.com/dmlc/decord
-# cd decord
-# mkdir build && cd build
-# cmake .. -DUSE_CUDA=0 -DCMAKE_BUILD_TYPE=Release
-# make
-# cd ../python
-# sed -i 's/maintainer_email.*/&\n    dependency_links=[\n        "https:\/\/mirrors.tuna.tsinghua.edu.cn\/pypi\/web\/simple"\n    ],/g' setup.py
-# python3 setup.py install --user
-# cd ../..
-# pwd
-# note: make sure you have cmake 3.8 or later, you can install from cmake official website if it's too old
-
-
-
-# pip install -e "python[all_npu]"
-
-# pip install modelscope
-# pip install pytest
