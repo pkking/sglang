@@ -1,0 +1,20 @@
+name: sync model from modelscope to hf
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/sync_model_list.ini"
+      - ".github/workflows/modelscope2hf.yaml"
+
+jobs:
+  sync:
+    runs-on: linux-arm64-npu-1
+    container:
+      image: swr.cn-southwest-2.myhuaweicloud.com/base_image/ascend-ci/cann:8.2.rc1.alpha003-910b-openeuler22.03-py3.11 
+    steps:
+      - run: |
+          pip config set global.index-url https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple 
+          pip install modelscope "huggingface-hub[cli]"
+        for m in `cat .github/workflows/modelscope2hf.ini`;do modelscope download --model $(echo $m|awk -F: '{print $1}');MODEL_PATH=$(modelscope scan-cache|grep `echo m|awk -F: '{print $1}'`|awk '{print $NF}')  hf upload sglang-ascend/$(basename $(echo m|awk -F: '{print $1}')) $MODEL_PATH . ;done
