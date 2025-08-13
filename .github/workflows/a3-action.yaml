@@ -1,4 +1,4 @@
-name: test_shceduler
+name: a3-action
 on:
   workflow_dispatch:
 
@@ -6,7 +6,7 @@ jobs:
   download:
     strategy:
       matrix:
-        param: [v1, v2, v3, v4, v5, v6, v7, v8]
+        param: [v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16]
     runs-on: linux-aarch64-a3-4
     container:
       image: swr.cn-southwest-2.myhuaweicloud.com/base_image/ascend-ci/cann:8.2.rc1.alpha003-910b-openeuler22.03-py3.11
@@ -15,3 +15,4 @@ jobs:
       - name: Sleep
         run: |
           npu-smi info
+          sleep 3600
